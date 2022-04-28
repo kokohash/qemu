@@ -86,6 +86,8 @@ static uint64_t stm32h735_rcc_read(void *opaque, hwaddr addr,  unsigned int size
         return s->rcc_cifr;
     case RCC_CICR:
         return s->rcc_cicr;
+    case RCC_BDCR:
+        return s->rcc_bdcr;
     default:
         return 0;
     }
@@ -100,7 +102,7 @@ static void stm32h735_rcc_write(void *opaque, hwaddr addr, uint64_t val64,  unsi
 
     switch (addr) {
     case RCC_CR:
-        s->rcc_cr = RCC_CR_HSERDY;
+        s->rcc_cr = RCC_CR_HSERDY | RCC_CR_PLL1RDY;
         return;
     case RCC_HSICFGR:
         s->rcc_hsicfgr = value;
@@ -112,7 +114,7 @@ static void stm32h735_rcc_write(void *opaque, hwaddr addr, uint64_t val64,  unsi
         s->rcc_cifr = RCC_CIFR_LSERDYF;
         return;
     case RCC_CICR:
-        s->rcc_cicr = RCC_CICR_LSERDYC;
+        s->rcc_cicr = RCC_CICR_PLL1RDYC;
         return;
     case RCC_BDCR:
         s->rcc_bdcr = RCC_BDCR_LSERDY;

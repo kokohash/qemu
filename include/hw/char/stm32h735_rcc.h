@@ -94,6 +94,7 @@
 #define RCC_CR_HSIRDY  (1 << 2)
 #define RCC_CR_HSION   (1 << 0)
 #define RCC_CR_HSIKERON (1 << 1)
+#define RCC_CR_PLL1RDY (1 << 25)
 
 #define RCC_CIER_LSIRDYIE (1 << 0)
 #define RCC_CIER_LSERDYIE (0 << 1)
@@ -102,9 +103,13 @@
 #define RCC_CIFR_LSERDYF (0 << 1)
 
 #define RCC_CICR_LSERDYC (1 << 1)
+#define RCC_CICR_PLL1RDYC (1 << 6)
 
 #define RCC_BDCR_LSEBYP (1 << 2)
 #define RCC_BDCR_LSERDY (1 << 1)
+#define RCC_BDCR_LSEON  (1 << 0)
+
+
 
 
 
