@@ -194,7 +194,7 @@ static void stm32h735_soc_realize(DeviceState *dev_soc, Error **errp)
     //create_unimplemented_device("SDMMC1", 0x52009000, 0x400);
     //create_unimplemented_device("Delay Block OCTOSPI1 ", 0x52006000, 0x400);
     //create_unimplemented_device("OCTOSPI1 control registers", 0x52005000, 0x400);
-    //create_unimplemented_device("FMC control registers", 0x52004000, 0x400);
+    create_unimplemented_device("FMC control registers", 0x52004000, 0x400);
     create_unimplemented_device("Flash interface registers", 0x52002000, 0x400);
     //create_unimplemented_device("Chrom-Art (DMA2D)", 0x52001000, 0x400);
     //create_unimplemented_device("MDMA", 0x52000000, 0x400);

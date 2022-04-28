@@ -26,6 +26,9 @@
 #define PWR_D3CR_VOSRDY  (1 << 13)
 #define PWR_D3CR_VOS    (0 << 14 && 0 << 15)
 #define PWR_CR3_BYPASS   (1 << 0)
+#define PWR_CR3_LDOEN    (0 << 1)
+#define PWR_CR3_SDEN     (0 << 2)
+#define PWR_CSR1_ACTVOSRDY (1 << 13)
 
 
 #define TYPE_STM32H735_PWR "stm32h735-pwr"

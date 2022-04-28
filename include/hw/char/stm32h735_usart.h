@@ -31,6 +31,7 @@
 #define USART_ISR_TXE  (1 << 7)
 #define USART_ISR_TC   (1 << 6)
 #define USART_ISR_RXNE (1 << 5)
+#define USART_ISR_TRACK (1 << 21)
 
 #define USART_CR1_UE  (1 << 0)
 #define USART_CR1_RXNEIE  (1 << 5)

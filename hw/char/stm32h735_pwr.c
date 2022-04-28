@@ -66,13 +66,13 @@ static void stm32h735_pwr_write(void *opaque, hwaddr addr, uint64_t val64,  unsi
         s->pwr_cr1 = value;
         return; 
     case PWR_CSR1:
-        s->pwr_csr1 = value;
+        s->pwr_csr1 = PWR_CSR1_ACTVOSRDY;
         return; 
     case PWR_CR2:
         s->pwr_cr2 = value;
         return;
     case PWR_CR3:
-        s->pwr_cr3 = PWR_CR3_BYPASS;
+        s->pwr_cr3 = PWR_CR3_BYPASS | PWR_CR3_LDOEN | PWR_CR3_SDEN;
         return; 
     case PWR_CPUCR:
         s->pwr_cpucr = value;

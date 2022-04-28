@@ -109,8 +109,8 @@
 #define RCC_BDCR_LSERDY (1 << 1)
 #define RCC_BDCR_LSEON  (1 << 0)
 
-
-
+#define RCC_CFGR_SWS ( 0 << 3 | 0 << 4 | 0 << 5)
+#define RCC_CFGR_SW ( 0 << 0 | 1 << 1 | 1 << 2)
 
 
 #define TYPE_STM32H735_RCC "stm32h735-rcc"
