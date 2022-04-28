@@ -64,4 +64,4 @@ struct STM32H735UsartState
     CharBackend chr;
     qemu_irq irq;
 };
-#endif
+#endif/* HW_STM32H735_USART_H */

@@ -2,6 +2,8 @@
 #define HW_ARM_STM32H735_SOC_H
 
 #include "hw/char/stm32h735_usart.h"
+#include "hw/char/stm32h735_pwr.h"
+#include "hw/char/stm32h735_rcc.h"
 #include "hw/arm/armv7m.h"
 #include "qom/object.h"
 #include "hw/clock.h"
@@ -21,13 +23,17 @@ OBJECT_DECLARE_SIMPLE_TYPE(STM32H735State, STM32H735_SOC)
 #define RAM_EXEC_SIZE (312 * 1024)
 #define DTCMRAM_ADRESS 0x20000000
 #define DTCMRAM_SIZE (125 * 1024)
+
+#define USE_ITCMRAM 0
+#if USE_ITCMRAM 
 #define ITCMRAM_ADRESS 0x00000000
 #define ITCMRAM_SIZE (62 * 1024)
+#endif
+
 #define RAM_D2_ADRESS 0x30000000
 #define RAM_D2_SIZE (31 * 1024)
 #define RAM_D3_ADRESS 0x38000000
 #define RAM_D3_SIZE (15 * 1024)
-
 
 struct STM32H735State 
 {
@@ -40,6 +46,8 @@ struct STM32H735State
     ARMv7MState armv7m;
 
     STM32H735UsartState usart[STM_NUM_USARTS];
+    STM32H735PwrState pwr[1];
+    STM32H735RccState rcc[1];
 
     //MemoryRegion sram;
     MemoryRegion flash;
@@ -47,7 +55,11 @@ struct STM32H735State
 
     MemoryRegion ram_exec;
     MemoryRegion dtcmram;
+
+    #if USE_ITCMRAM
     MemoryRegion itcmram;
+    #endif
+
     MemoryRegion ram_d2;
     MemoryRegion ram_d3;
 

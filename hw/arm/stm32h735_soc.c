@@ -19,6 +19,11 @@ static const uint32_t usart_addr[STM_NUM_USARTS] = { 0x40011000, 0x40004400, 0x4
 //position of USART
 static const int usart_irq[STM_NUM_USARTS] = {37, 38, 39};
 
+//pwr adress
+static const uint32_t pwr_addr = 0x58024800;
+//rcc adress
+static const uint32_t rcc_addr = 0x58024400;
+
 static void stm32h735_soc_initfn(Object *obj)
 {
     STM32H735State *s = STM32H735_SOC(obj);
@@ -30,6 +35,10 @@ static void stm32h735_soc_initfn(Object *obj)
         object_initialize_child(obj, "usart[*]", &s->usart[i],
                                 TYPE_STM32H735_USART);
     }
+
+    object_initialize_child(obj, "pwr", &s->pwr, TYPE_STM32H735_PWR);
+    object_initialize_child(obj, "rcc", &s->rcc, TYPE_STM32H735_RCC);
+
 
     s->sysclk = qdev_init_clock_in(DEVICE(s), "sysclk", NULL, NULL, 0);
     s->refclk = qdev_init_clock_in(DEVICE(s), "refclk", NULL, NULL, 0);
@@ -59,11 +68,6 @@ static void stm32h735_soc_realize(DeviceState *dev_soc, Error **errp)
         return;
     }
 
-    /*
-     * TODO: ideally we should model the SoC RCC and its ability to
-     * change the sysclk frequency and define different sysclk sources.
-     */
-
     /* The refclk always runs at frequency HCLK / 8 */
     clock_set_mul_div(s->refclk, 8, 1);
     clock_set_source(s->refclk, s->sysclk);
@@ -79,13 +83,6 @@ static void stm32h735_soc_realize(DeviceState *dev_soc, Error **errp)
     memory_region_add_subregion(system_memory, FLASH_BASE_ADDRESS, &s->flash);
     memory_region_add_subregion(system_memory, 0, &s->flash_alias);
 
-    /* Init SRAM region */
-    /*
-    memory_region_init_ram(&s->sram, NULL, "STM32H735.sram", SRAM_SIZE,
-                           &error_fatal);
-    memory_region_add_subregion(system_memory, SRAM_BASE_ADDRESS, &s->sram);
-    */
-
     memory_region_init_ram(&s->ram_exec, NULL, "STM32H735.ram_exec", RAM_EXEC_SIZE,
                            &error_fatal);
     memory_region_add_subregion(system_memory, RAM_EXEC_ADRESS, &s->ram_exec);
@@ -94,9 +91,11 @@ static void stm32h735_soc_realize(DeviceState *dev_soc, Error **errp)
                            &error_fatal);
     memory_region_add_subregion(system_memory, DTCMRAM_ADRESS, &s->dtcmram);
 
+    #if USE_ITCMRAM 
     memory_region_init_ram(&s->itcmram, NULL, "STM32H735.itcmram", ITCMRAM_SIZE,
                            &error_fatal);
     memory_region_add_subregion(system_memory, ITCMRAM_ADRESS, &s->itcmram);
+    #endif
 
     memory_region_init_ram(&s->ram_d2, NULL, "STM32H735.ram_d2", RAM_D2_SIZE,
                            &error_fatal);
@@ -105,7 +104,6 @@ static void stm32h735_soc_realize(DeviceState *dev_soc, Error **errp)
     memory_region_init_ram(&s->ram_d3, NULL, "STM32H735.ram_d3", RAM_D3_SIZE,
                            &error_fatal);
     memory_region_add_subregion(system_memory, RAM_D3_ADRESS, &s->ram_d3);
-
 
     /* Init ARMv7m */
     armv7m = DEVICE(&s->armv7m);
@@ -132,14 +130,33 @@ static void stm32h735_soc_realize(DeviceState *dev_soc, Error **errp)
         sysbus_connect_irq(busdev, 0, qdev_get_gpio_in(armv7m, usart_irq[i]));
     }
 
+    //pwr init
+    dev = DEVICE(&(s->pwr));
+    if (!sysbus_realize(SYS_BUS_DEVICE(&s->pwr), errp)) 
+    {
+        return;
+    }
+    busdev = SYS_BUS_DEVICE(dev);
+    sysbus_mmio_map(busdev, 0, pwr_addr);
+
+    //rcc init
+    dev = DEVICE(&(s->rcc));
+    if (!sysbus_realize(SYS_BUS_DEVICE(&s->rcc), errp)) 
+    {
+        return;
+    }
+    busdev = SYS_BUS_DEVICE(dev);
+    sysbus_mmio_map(busdev, 0, rcc_addr);
+
+    
     //First page :)
-    //create_unimplemented_device("HSEM", 0x58026400, 0x400);
-    //create_unimplemented_device("ADC3", 0x58026000, 0x400);
+    create_unimplemented_device("HSEM", 0x58026400, 0x400);
+    create_unimplemented_device("ADC3", 0x58026000, 0x400);
     //create_unimplemented_device("DMAMUX2", 0x58025800, 0x400);
     //create_unimplemented_device("BDMA", 0x58025400, 0x400);
     create_unimplemented_device("CRC", 0x58024C00, 0x400);
-    create_unimplemented_device("PWR", 0x58024800, 0x400);
-    create_unimplemented_device("RCC", 0x58024400, 0x400);
+    //create_unimplemented_device("PWR", 0x58024800, 0x400);
+    //create_unimplemented_device("RCC", 0x58024400, 0x400);
     create_unimplemented_device("GPIOK", 0x58022800, 0x400);
     create_unimplemented_device("GPIOJ", 0x58022400, 0x400);
     create_unimplemented_device("GPIOH", 0x58021C00, 0x400);
@@ -255,7 +272,10 @@ static void stm32h735_soc_realize(DeviceState *dev_soc, Error **errp)
     create_unimplemented_device("TIM4", 0x40000800, 0x400);
     create_unimplemented_device("TIM3", 0x40000400, 0x400);
     create_unimplemented_device("TIM2", 0x40000000, 0x400);
- 
+    
+
+    //create_unimplemented_device("DUMMY", 0xFFFFF000, 0xFFF);
+    
 }
 
 static Property stm32h735_soc_properties[] = {

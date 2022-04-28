@@ -194,7 +194,7 @@ static void stm32h735_usart_write(void *opaque, hwaddr addr,
     }
 }
 
-static const MemoryRegionOps stm32735_usart_ops = {
+static const MemoryRegionOps stm32h735_usart_ops = {
     .read = stm32h735_usart_read,
     .write = stm32h735_usart_write,
     .endianness = DEVICE_NATIVE_ENDIAN,

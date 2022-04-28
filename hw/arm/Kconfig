@@ -1,3 +1,16 @@
+# My custom stm32h735 board :)
+config STM32H735_SOC
+    bool 
+    select ARM_V7M
+    select OR_IRQ
+    select STM32H735_USART
+    select STM32H735_PWR
+    select STM32H735_RCC
+
+config STM32H735
+    bool 
+    select STM32H735_SOC
+#
 config ARM_VIRT
     bool
     imply PCI_DEVICES
