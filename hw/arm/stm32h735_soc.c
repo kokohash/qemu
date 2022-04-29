@@ -21,6 +21,7 @@ static const int usart_irq[STM_NUM_USARTS] = {37, 38, 39};
 
 //pwr adress
 static const uint32_t pwr_addr = 0x58024800;
+
 //rcc adress
 static const uint32_t rcc_addr = 0x58024400;
 
@@ -38,7 +39,6 @@ static void stm32h735_soc_initfn(Object *obj)
 
     object_initialize_child(obj, "pwr", &s->pwr, TYPE_STM32H735_PWR);
     object_initialize_child(obj, "rcc", &s->rcc, TYPE_STM32H735_RCC);
-
 
     s->sysclk = qdev_init_clock_in(DEVICE(s), "sysclk", NULL, NULL, 0);
     s->refclk = qdev_init_clock_in(DEVICE(s), "refclk", NULL, NULL, 0);
@@ -83,6 +83,7 @@ static void stm32h735_soc_realize(DeviceState *dev_soc, Error **errp)
     memory_region_add_subregion(system_memory, FLASH_BASE_ADDRESS, &s->flash);
     memory_region_add_subregion(system_memory, 0, &s->flash_alias);
 
+    // sram init
     memory_region_init_ram(&s->ram_exec, NULL, "STM32H735.ram_exec", RAM_EXEC_SIZE,
                            &error_fatal);
     memory_region_add_subregion(system_memory, RAM_EXEC_ADRESS, &s->ram_exec);
@@ -147,7 +148,6 @@ static void stm32h735_soc_realize(DeviceState *dev_soc, Error **errp)
     }
     busdev = SYS_BUS_DEVICE(dev);
     sysbus_mmio_map(busdev, 0, rcc_addr);
-
     
     //First page :)
     create_unimplemented_device("HSEM", 0x58026400, 0x400);

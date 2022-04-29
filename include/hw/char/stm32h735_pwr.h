@@ -52,6 +52,8 @@ struct STM32H735PwrState
     uint32_t pwr_wkupfr;
     uint32_t pwr_wkupepr;
 
+    uint32_t flash_acr;
+
     CharBackend chr;
     qemu_irq irq;
 };

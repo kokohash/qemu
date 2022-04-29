@@ -110,8 +110,17 @@
 #define RCC_BDCR_LSERDY (1 << 1)
 #define RCC_BDCR_LSEON  (1 << 0)
 
-#define RCC_CFGR_SWS ( 1 << 3 | 1 << 4 | 0 << 5)
-#define RCC_CFGR_SW ( 1 << 0 | 1 << 1 | 0 << 2)
+#define RCC_CFGR_SWS ( 0 << 3 | 0 << 4 | 0 << 5)
+#define RCC_CFGR_SW ( 0 << 0 | 0 << 1 | 0 << 2)
+#define RCC_CFGR_MCO1 (0 << 22 | 0 << 23 | 0 << 24)
+
+#define RCC_D1CFGR_D1PPRE (0 << 4 | 0 << 5 | 0 << 6)
+#define RCC_D1CFGR_HPRE (0 << 0 | 0 << 1 | 0 << 2 | 0 << 3)
+#define RCC_D1CFGR_D1CPRE (0 << 8 | 0 << 9 | 0 << 10 | 0 << 11)
+
+#define RCC_PLLCKSELR_PLLSRC ( 0 << 0 | 0 << 1)
+
+
 
 
 #define TYPE_STM32H735_RCC "stm32h735-rcc"

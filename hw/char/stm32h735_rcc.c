@@ -90,6 +90,10 @@ static uint64_t stm32h735_rcc_read(void *opaque, hwaddr addr,  unsigned int size
         return s->rcc_bdcr;
     case RCC_CFGR:
         return s->rcc_cfgr;
+    case RCC_D1CFGR:
+        return s->rcc_d1cfgr;
+    case RCC_PLLCKSELR:
+        return s->rcc_pllckselr;
     default:
         return 0;
     }
@@ -101,6 +105,8 @@ static void stm32h735_rcc_write(void *opaque, hwaddr addr, uint64_t val64,  unsi
 {
     STM32H735RccState *s = opaque;
     uint64_t value = val64;
+
+    s->rcc_cfgr |= RCC_CFGR_SWS;
 
     switch (addr) {
     case RCC_CR:
@@ -122,8 +128,13 @@ static void stm32h735_rcc_write(void *opaque, hwaddr addr, uint64_t val64,  unsi
         s->rcc_bdcr = RCC_BDCR_LSERDY;
         return;
     case RCC_CFGR:
-        s->rcc_cfgr = RCC_CFGR_SW | RCC_CFGR_SWS;
+        s->rcc_cfgr |= RCC_CFGR_SW | RCC_CFGR_MCO1;
         return;
+    case RCC_D1CFGR:
+        s->rcc_d1cfgr = RCC_D1CFGR_D1PPRE | RCC_D1CFGR_D1CPRE | RCC_D1CFGR_HPRE;
+        return;
+    case RCC_PLLCKSELR:
+        s->rcc_pllckselr = RCC_PLLCKSELR_PLLSRC;
     default:
         return;
     }

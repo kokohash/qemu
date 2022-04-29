@@ -50,6 +50,7 @@ config STM32H735_PWR
 config STM32H735_RCC
     bool
 
+
 config CMSDK_APB_UART
     bool
 

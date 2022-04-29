@@ -15,6 +15,10 @@ OBJECT_DECLARE_SIMPLE_TYPE(STM32H735State, STM32H735_SOC)
 
 #define FLASH_BASE_ADDRESS 0x08000000
 #define FLASH_SIZE (128 * 1024)
+
+#define FLASH_ACR 0x000
+#define FLASH_ACR_LATENCY ( 1 << 0 | 0 << 1 | 0 << 2 | 0 << 3)
+
 /*
 #define SRAM_BASE_ADDRESS 0x20000000
 #define SRAM_SIZE (256 * 1024)
@@ -65,6 +69,8 @@ struct STM32H735State
 
     Clock *sysclk;
     Clock *refclk;
+
+    uint32_t flash_acr;
 };
 
 #endif
