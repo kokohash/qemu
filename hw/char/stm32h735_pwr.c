@@ -61,12 +61,15 @@ static void stm32h735_pwr_write(void *opaque, hwaddr addr, uint64_t val64,  unsi
     STM32H735PwrState *s = opaque;
     uint64_t value = val64;
 
+    // HACK: all write to control register sets status register 
+    s->pwr_csr1 = PWR_CSR1_ACTVOSRDY;
+
     switch (addr) {
     case PWR_CR1:
         s->pwr_cr1 = value;
         return; 
     case PWR_CSR1:
-        s->pwr_csr1 = PWR_CSR1_ACTVOSRDY;
+        //s->pwr_csr1 = PWR_CSR1_ACTVOSRDY;
         return; 
     case PWR_CR2:
         s->pwr_cr2 = value;

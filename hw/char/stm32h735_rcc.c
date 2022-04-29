@@ -104,7 +104,7 @@ static void stm32h735_rcc_write(void *opaque, hwaddr addr, uint64_t val64,  unsi
 
     switch (addr) {
     case RCC_CR:
-        s->rcc_cr = RCC_CR_HSERDY | RCC_CR_PLL1RDY;
+        s->rcc_cr = RCC_CR_HSERDY | RCC_CR_PLL1RDY | RCC_CR_HSIRDY | RCC_CR_HSION | RCC_CR_HSEON | RCC_CR_HSIDIVF | RCC_CR_HSIKERON;
         return;
     case RCC_HSICFGR:
         s->rcc_hsicfgr = value;
