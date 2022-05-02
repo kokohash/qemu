@@ -13,6 +13,7 @@
 #include "hw/sysbus.h"
 #include "glib.h"
 
+
 //Address for: USART1, USART2, USART3
 static const uint32_t usart_addr[STM_NUM_USARTS] = { 0x40011000, 0x40004400, 0x40004800};
 
@@ -24,6 +25,10 @@ static const uint32_t pwr_addr = 0x58024800;
 
 //rcc adress
 static const uint32_t rcc_addr = 0x58024400;
+
+//flash interface adress
+static const uint32_t flash_addr = 0x52002000;
+
 
 static void stm32h735_soc_initfn(Object *obj)
 {
@@ -52,6 +57,7 @@ static void stm32h735_soc_realize(DeviceState *dev_soc, Error **errp)
     int i;
 
     MemoryRegion *system_memory = get_system_memory();
+
 
     /*
      * We use s->refclk internally and only define it with qdev_init_clock_in()
@@ -148,7 +154,16 @@ static void stm32h735_soc_realize(DeviceState *dev_soc, Error **errp)
     }
     busdev = SYS_BUS_DEVICE(dev);
     sysbus_mmio_map(busdev, 0, rcc_addr);
-    
+
+    //flash interface init
+    dev = DEVICE(&(s->flash_reg));
+    if (!sysbus_realize(SYS_BUS_DEVICE(&s->flash_reg), errp)) 
+    {
+        return;
+    }
+    busdev = SYS_BUS_DEVICE(dev);
+    sysbus_mmio_map(busdev, 0, flash_addr);
+
     //First page :)
     create_unimplemented_device("HSEM", 0x58026400, 0x400);
     create_unimplemented_device("ADC3", 0x58026000, 0x400);
@@ -195,7 +210,7 @@ static void stm32h735_soc_realize(DeviceState *dev_soc, Error **errp)
     //create_unimplemented_device("Delay Block OCTOSPI1 ", 0x52006000, 0x400);
     //create_unimplemented_device("OCTOSPI1 control registers", 0x52005000, 0x400);
     create_unimplemented_device("FMC control registers", 0x52004000, 0x400);
-    create_unimplemented_device("Flash interface registers", 0x52002000, 0x400);
+    //create_unimplemented_device("Flash interface registers", 0x52002000, 0x400);
     //create_unimplemented_device("Chrom-Art (DMA2D)", 0x52001000, 0x400);
     //create_unimplemented_device("MDMA", 0x52000000, 0x400);
     //create_unimplemented_device("GPV", 0x51000000, 0x400);

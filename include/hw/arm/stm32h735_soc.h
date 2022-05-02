@@ -4,6 +4,7 @@
 #include "hw/char/stm32h735_usart.h"
 #include "hw/char/stm32h735_pwr.h"
 #include "hw/char/stm32h735_rcc.h"
+#include "hw/char/stm32h735_flash.h"
 #include "hw/arm/armv7m.h"
 #include "qom/object.h"
 #include "hw/clock.h"
@@ -15,9 +16,6 @@ OBJECT_DECLARE_SIMPLE_TYPE(STM32H735State, STM32H735_SOC)
 
 #define FLASH_BASE_ADDRESS 0x08000000
 #define FLASH_SIZE (128 * 1024)
-
-#define FLASH_ACR 0x000
-#define FLASH_ACR_LATENCY ( 1 << 0 | 0 << 1 | 0 << 2 | 0 << 3)
 
 /*
 #define SRAM_BASE_ADDRESS 0x20000000
@@ -52,6 +50,7 @@ struct STM32H735State
     STM32H735UsartState usart[STM_NUM_USARTS];
     STM32H735PwrState pwr[1];
     STM32H735RccState rcc[1];
+    STM32H735FlashRegState flash_reg[1];
 
     //MemoryRegion sram;
     MemoryRegion flash;
@@ -69,8 +68,5 @@ struct STM32H735State
 
     Clock *sysclk;
     Clock *refclk;
-
-    uint32_t flash_acr;
-};
 
 #endif

@@ -34,6 +34,7 @@ softmmu_ss.add(when: 'CONFIG_STM32F2XX_USART', if_true: files('stm32f2xx_usart.c
 softmmu_ss.add(when: 'CONFIG_STM32H735_USART', if_true: files('stm32h735_usart.c'))
 softmmu_ss.add(when: 'CONFIG_STM32H735_PWR', if_true: files('stm32h735_pwr.c'))
 softmmu_ss.add(when: 'CONFIG_STM32H735_RCC', if_true: files('stm32h735_rcc.c'))
+softmmu_ss.add(when: 'CONFIG_STM32H735_FLASH', if_true: files('stm32h735_flash.c'))
 softmmu_ss.add(when: 'CONFIG_MCHP_PFSOC_MMUART', if_true: files('mchp_pfsoc_mmuart.c'))
 
 specific_ss.add(when: 'CONFIG_HTIF', if_true: files('riscv_htif.c'))
