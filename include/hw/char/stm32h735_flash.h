@@ -40,7 +40,12 @@
 #define FLASH_OPTSR2_PRG 0x074
 
 
-#define FLASH_ACR_LATENCY ( 1 << 0 | 0 << 1 | 0 << 2 | 0 << 3)
+#define FLASH_ACR_LATENCY ( 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3)
+#define FLASH_KEYR_KEY1 0x45670123
+#define FLASH_KEYR_KEY2 0xCDEF89AB
+#define FLASH_CR_PG (1 << 1)
+#define FLASH_CR_LOCK (0 << 0)
+#define FLASH_CR_FW (1 << 6)
 
 
 #define TYPE_STM32H735_FLASH_REG "stm32h735-flash-reg"

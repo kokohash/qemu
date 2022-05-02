@@ -48,9 +48,9 @@ struct STM32H735State
     ARMv7MState armv7m;
 
     STM32H735UsartState usart[STM_NUM_USARTS];
-    STM32H735PwrState pwr[1];
-    STM32H735RccState rcc[1];
-    STM32H735FlashRegState flash_reg[1];
+    STM32H735PwrState pwr;
+    STM32H735RccState rcc;
+    STM32H735FlashRegState flash_reg;
 
     //MemoryRegion sram;
     MemoryRegion flash;
@@ -68,5 +68,5 @@ struct STM32H735State
 
     Clock *sysclk;
     Clock *refclk;
-
+};
 #endif
