@@ -39,8 +39,9 @@
 #define FLASH_OPTSR2_CUR 0x070
 #define FLASH_OPTSR2_PRG 0x074
 
+//latency
+#define FLASH_ACR_MASK ( 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3)
 
-#define FLASH_ACR_LATENCY ( 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3)
 #define FLASH_KEYR_KEY1 0x45670123
 #define FLASH_KEYR_KEY2 0xCDEF89AB
 #define FLASH_CR_PG (1 << 1)

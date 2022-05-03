@@ -75,7 +75,7 @@ static uint64_t stm32h735_usart_read(void *opaque, hwaddr addr,
     STM32H735UsartState *s = opaque;
     uint64_t retvalue;
 
-    DB_PRINT("Read 0x%"HWADDR_PRIx"\n", addr);
+    printf("USART-Read 0x%"HWADDR_PRIx"\n", addr);
 
     switch (addr) {
     case USART_ISR:
@@ -83,7 +83,7 @@ static uint64_t stm32h735_usart_read(void *opaque, hwaddr addr,
         qemu_chr_fe_accept_input(&s->chr);
         return retvalue;
     case USART_RDR:
-        DB_PRINT("Value: 0x%" PRIx32 ", %c\n", s->usart_rdr, (char) s->usart_rdr);
+        printf("Value: 0x%" PRIx32 ", %c\n", s->usart_rdr, (char) s->usart_rdr);
         retvalue = s->usart_rdr & 0x3FF;
         s->usart_isr &= ~USART_ISR_RXNE;
         qemu_chr_fe_accept_input(&s->chr);
@@ -125,7 +125,7 @@ static void stm32h735_usart_write(void *opaque, hwaddr addr,
     uint32_t value = val64;
     unsigned char ch;
 
-    DB_PRINT("Write 0x%" PRIx32 ", 0x%"HWADDR_PRIx"\n", value, addr);
+    printf("USART-Write 0x%" PRIx32 ", 0x%"HWADDR_PRIx"\n", value, addr);
 
     switch (addr) {
     case USART_ISR:

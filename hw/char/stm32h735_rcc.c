@@ -75,6 +75,8 @@ static uint64_t stm32h735_rcc_read(void *opaque, hwaddr addr,  unsigned int size
 
     STM32H735RccState *s = opaque;
 
+    printf("RCC-Read 0x%"HWADDR_PRIx"\n", addr);
+
     switch (addr) {
     case RCC_CR:
         return s->rcc_cr;
@@ -103,8 +105,11 @@ static uint64_t stm32h735_rcc_read(void *opaque, hwaddr addr,  unsigned int size
 
 static void stm32h735_rcc_write(void *opaque, hwaddr addr, uint64_t val64,  unsigned int size)
 {
+    
     STM32H735RccState *s = opaque;
     uint64_t value = val64;
+
+    printf("RCC-Write 0x%" PRIx64 ", 0x%"HWADDR_PRIx"\n", value, addr);
 
     s->rcc_cfgr |= RCC_CFGR_SWS;
 

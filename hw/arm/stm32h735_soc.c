@@ -44,6 +44,8 @@ static void stm32h735_soc_initfn(Object *obj)
 
     object_initialize_child(obj, "pwr", &s->pwr, TYPE_STM32H735_PWR);
     object_initialize_child(obj, "rcc", &s->rcc, TYPE_STM32H735_RCC);
+    object_initialize_child(obj, "flash_reg", &s->flash_reg, TYPE_STM32H735_FLASH_REG);
+
 
     s->sysclk = qdev_init_clock_in(DEVICE(s), "sysclk", NULL, NULL, 0);
     s->refclk = qdev_init_clock_in(DEVICE(s), "refclk", NULL, NULL, 0);

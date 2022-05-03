@@ -88,13 +88,13 @@ static uint64_t stm32h735_flash_read(void *opaque, hwaddr addr,  unsigned int si
 static void stm32h735_flash_write(void *opaque, hwaddr addr, uint64_t val64,  unsigned int size)
 {
     STM32H735FlashRegState *s = opaque;
-    //uint64_t value = val64;
+    uint64_t value = val64;
 
     s->flash_cr = FLASH_CR_LOCK;
 
     switch (addr) {
     case FLASH_ACR:
-        s->flash_acr = FLASH_ACR_LATENCY;
+        s->flash_acr = value & FLASH_ACR_MASK;
         return;
     /*    
     case FLASH_KEYR:
