@@ -31,12 +31,15 @@
 #define USART_ISR_TXE  (1 << 7)
 #define USART_ISR_TC   (1 << 6)
 #define USART_ISR_RXNE (1 << 5)
-#define USART_ISR_TRACK (1 << 21)
+#define USART_ISR_TEACK (1 << 21)
+#define USART_ISR_RTOF (1 << 11)
 
 #define USART_CR1_UE  (1 << 0)
 #define USART_CR1_RXNEIE  (1 << 5)
-#define USART_CR1_TE  (1 << 3)
-#define USART_CR1_RE  (1 << 2)
+#define USART_CR1_TE  (0 << 3)
+#define USART_CR1_RE  (0 << 2)
+
+#define USART_CR2_RTOEN (0 << 23)
 
 #define TYPE_STM32H735_USART "stm32h735-usart"
 OBJECT_DECLARE_SIMPLE_TYPE(STM32H735UsartState, STM32H735_USART)

@@ -75,7 +75,7 @@ static uint64_t stm32h735_usart_read(void *opaque, hwaddr addr,
     STM32H735UsartState *s = opaque;
     uint64_t retvalue;
 
-    printf("USART-Read 0x%"HWADDR_PRIx"\n", addr);
+    //printf("USART-Read 0x%"HWADDR_PRIx"\n", addr);
 
     switch (addr) {
     case USART_ISR:
@@ -126,13 +126,13 @@ static void stm32h735_usart_write(void *opaque, hwaddr addr,
     unsigned char ch;
 
     printf("USART-Write 0x%" PRIx32 ", 0x%"HWADDR_PRIx"\n", value, addr);
-
+    
     switch (addr) {
     case USART_ISR:
         if (value <= 0x3FF) {
             /* I/O being synchronous, TXE is always set. In addition, it may
                only be set by hardware, so keep it set here. */
-            s->usart_isr = value | USART_ISR_TXE;
+            s->usart_isr = value | USART_ISR_TXE /*| USART_ISR_TEACK | USART_ISR_RTOF*/;
         } else {
             s->usart_isr &= value;
         }
@@ -158,17 +158,18 @@ static void stm32h735_usart_write(void *opaque, hwaddr addr,
         s->usart_brr = value;
         return;
     case USART_CR1:
-        s->usart_cr1 = value;
+        s->usart_cr1 =value & (USART_CR1_TE | USART_CR1_RE | USART_CR1_UE);
             if (s->usart_cr1 & USART_CR1_RXNEIE &&
                 s->usart_isr & USART_ISR_RXNE) {
                 qemu_set_irq(s->irq, 1);
-            }
+
+            }      
         return;
     case USART_CR2:
         s->usart_cr2 = value;
         return;
     case USART_CR3:
-        s->usart_cr3 = value;
+        s->usart_cr3 = value | USART_CR2_RTOEN;
         return;
     case USART_GTPR:
         s->usart_gtpr = value;
