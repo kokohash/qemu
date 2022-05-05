@@ -75,6 +75,8 @@ static uint64_t stm32h735_usart_read(void *opaque, hwaddr addr,
     STM32H735UsartState *s = opaque;
     uint64_t retvalue;
 
+    //HACK: Just to set the flags
+    s->usart_isr |= USART_ISR_TC | USART_ISR_TXE;
     //printf("USART-Read 0x%"HWADDR_PRIx"\n", addr);
 
     switch (addr) {
@@ -125,7 +127,7 @@ static void stm32h735_usart_write(void *opaque, hwaddr addr,
     uint32_t value = val64;
     unsigned char ch;
 
-    printf("USART-Write 0x%" PRIx32 ", 0x%"HWADDR_PRIx"\n", value, addr);
+    //printf("USART-Write 0x%" PRIx32 ", 0x%"HWADDR_PRIx"\n", value, addr);
     
     switch (addr) {
     case USART_ISR:
@@ -146,19 +148,22 @@ static void stm32h735_usart_write(void *opaque, hwaddr addr,
             /* XXX this blocks entire thread. Rewrite to use
              * qemu_chr_fe_write and background I/O callbacks */
             qemu_chr_fe_write_all(&s->chr, &ch, 1);
+
+            //HACK: Cant get char to write to stdout.
+            putchar(ch);
             /* XXX I/O are currently synchronous, making it impossible for
                software to observe transient states where TXE or TC aren't
                set. Unlike TXE however, which is read-only, software may
                clear TC by writing 0 to the SR register, so set it again
                on each write. */
-            s->usart_isr |= USART_ISR_TC;
+            s->usart_isr |= USART_ISR_TC | USART_ISR_TXE;
         }
         return;
     case USART_BRR:
         s->usart_brr = value;
         return;
     case USART_CR1:
-        s->usart_cr1 =value & (USART_CR1_TE | USART_CR1_RE | USART_CR1_UE);
+        s->usart_cr1 = value & (USART_CR1_TE | USART_CR1_RE | USART_CR1_UE);
             if (s->usart_cr1 & USART_CR1_RXNEIE &&
                 s->usart_isr & USART_ISR_RXNE) {
                 qemu_set_irq(s->irq, 1);
@@ -169,7 +174,7 @@ static void stm32h735_usart_write(void *opaque, hwaddr addr,
         s->usart_cr2 = value;
         return;
     case USART_CR3:
-        s->usart_cr3 = value | USART_CR2_RTOEN;
+        s->usart_cr3 = value;
         return;
     case USART_GTPR:
         s->usart_gtpr = value;
